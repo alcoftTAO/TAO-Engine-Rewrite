@@ -8,32 +8,27 @@ This game engine was created in Kali Linux, you can see if your OS was tested on
 
 
 ## Tested OS
-### Windows
-Windows 7 - Not tested.
+Mono:
 
-Windows 8/8.1 - Not tested.
+	· Windows 7: Not tested.
+	· Windows 8/8.1: Not tested.
+	· Windows 10: Not tested.
+	· Windows 11: Not tested.
+	· Arch Linux: Not tested.
+	· Debian: Stable.
+	· Ubuntu: Not tested.
+	· Mac OS: Not tested.
+	
+DotNet:
 
-Windows 10 - Testing...
-
-Windows 11 - Testing...
-
-
-### MacOS
-Mac OS 11 - Not tested.
-
-Mac OS 12 - Not tested.
-
-Mac OS 13 - Not tested.
-
-
-### Linux
-Kali Linux - Tested, stable.
-
-Arch Linux - Not tested.
-
-Ubuntu - Not tested.
-
-Debian - Not tested.
+	· Windows 7: Not tested.
+	· Windows 8/8.1: Not tested.
+	· Windows 10: Not tested.
+	· Windows 11: Not tested.
+	· Arch Linux: Not tested.
+	· Debian: Not tested.
+	· Ubuntu: Not tested.
+	· Mac OS: Not tested.
 
 
 ----------------------------------------------
