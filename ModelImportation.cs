@@ -104,8 +104,8 @@ namespace TAO.Engine
 
             if (WriteToFile.Trim() != "")
             {
-                DiskData.CreateFile("Mods/Models/" + WriteToFile + ".tmd");
-                File.WriteAllLines("Mods/Models/" + WriteToFile + ".tmd", tmdData.ToArray());
+                DiskData.CreateFile("Assets/Models/" + WriteToFile + ".tmd");
+                File.WriteAllLines("Assets/Models/" + WriteToFile + ".tmd", tmdData.ToArray());
             }
 
             return tmdData.ToArray();
