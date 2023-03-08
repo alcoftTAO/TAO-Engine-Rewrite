@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using StbImageSharp;
 
-namespace TAO.Engine.OpenGLCore
+namespace TAO.Engine.OpenGL.OpenGLCore
 {
     public class TWindow : GameWindow
     {
@@ -25,7 +25,9 @@ namespace TAO.Engine.OpenGLCore
             EnableCap.DepthTest,
             EnableCap.Fog,
             EnableCap.Texture2D,
-            EnableCap.TextureCubeMap
+            EnableCap.TextureCubeMap,
+            EnableCap.Light0,
+            EnableCap.Light1
         };
         public List<TObject> Objs = new List<TObject>();
         public Dictionary<string, TTexture> Textures = new Dictionary<string, TTexture>();
@@ -36,6 +38,11 @@ namespace TAO.Engine.OpenGLCore
         public bool WideScreen = true;
         public TVector2 MousePosition = TVector2.Zero;
         public TVector2 MousePosition01 = TVector2.Zero;
+        public Light SunLight = new Light()
+        {
+            LightColor = Color4.White,
+            LightIntensity = 255
+        };
 
         public void BasicStart(VSyncMode VSync = VSyncMode.On)
         {
@@ -227,6 +234,13 @@ namespace TAO.Engine.OpenGLCore
                     {
                         c = Color4.White;
                     }
+
+                    //Calculate lighting to "c" color
+                    c = OpenGLMath.ExtraColorMath.Multiply
+                    (
+                        c,
+                        OpenGLMath.ExtraColorMath.Multiply(SunLight.LightColor, SunLight.LightIntensity)
+                    );
 
                     //Drawing the vert with the color and texture coords
                     if (Objs[obj].Texture.Trim() != "")

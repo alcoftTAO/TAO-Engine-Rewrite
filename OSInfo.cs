@@ -33,9 +33,9 @@ namespace TAO.Engine
                 {
                     action.Invoke();
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Log.WriteError("Error on a third-party action: " + ex.Message);
                 }
             }
         }
@@ -53,9 +53,9 @@ namespace TAO.Engine
                 {
                     action.Invoke(data);
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Log.WriteError("Error on a third-party action: " + ex.Message);
                 }
             }
         }

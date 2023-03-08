@@ -4,7 +4,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-namespace TAO.Engine.OpenGLCore
+namespace TAO.Engine.OpenGL.OpenGLCore
 {
     public class TObject
     {
@@ -72,6 +72,19 @@ namespace TAO.Engine.OpenGLCore
             return ID;
         }
 
+        public static TObject GetByID(int ID)
+        {
+            for (int i = 0; i < Objects.Count; i++)
+            {
+                if (Objects[i].ID == ID)
+                {
+                    return Objects[i];
+                }
+            }
+
+            return null;
+        }
+
         public static bool Exists(int ID)
         {
             for (int i = 0; i < Objects.Count; i++)
@@ -83,6 +96,48 @@ namespace TAO.Engine.OpenGLCore
             }
 
             return false;
+        }
+
+        public static TObject FromModel(TModelData Data)
+        {
+            TObject obj = new TObject();
+
+            obj.Vertices = Data.Vertices;
+            obj.Colors = OpenGLMath.VectorToColor(Data.Colors);
+            obj.TextureCoords = Data.TextureCoords;
+            obj.Texture = Data.TextureName;
+
+            if (Data.RenderMode == "quads")
+            {
+                obj.RenderMode = PrimitiveType.Quads;
+            }
+            else if (Data.RenderMode == "triangles")
+            {
+                obj.RenderMode = PrimitiveType.Triangles;
+            }
+            else if (Data.RenderMode == "lines")
+            {
+                obj.RenderMode = PrimitiveType.Lines;
+            }
+            else if (Data.RenderMode == "points")
+            {
+                obj.RenderMode = PrimitiveType.Points;
+            }
+            else if (Data.RenderMode == "patches")
+            {
+                obj.RenderMode = PrimitiveType.Patches;
+            }
+            else
+            {
+                obj.RenderMode = PrimitiveType.Polygon;
+            }
+
+            return obj;
+        }
+
+        public static TObject FromModel(string Name, bool FromMods = false)
+        {
+            return FromModel(ModelImportation.GetModelData(Name, FromMods));
         }
 
         public void ChangeColor(Color4 ColorToChange)

@@ -5,7 +5,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using StbImageSharp;
 
-namespace TAO.Engine
+namespace TAO.Engine.OpenGL.OpenGLCore
 {
     public class TTexture
     {
