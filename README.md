@@ -10,7 +10,7 @@ This game engine was created in Kali Linux, you can see if your OS was tested on
 ## Tested OS
 Mono:
 
-	· Windows 7: Not tested.
+	· Windows 7: ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green)
 	· Windows 8/8.1: Not tested.
 	· Windows 10: Not tested.
 	· Windows 11: Not tested.
