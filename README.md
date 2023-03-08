@@ -21,6 +21,12 @@ DotNet (.NET):
 ![build](https://img.shields.io/badge/build%20(.NET)-Broken-red)
 ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
+Stable: It runs perfectly with no issues.
+
+Unstable: It runs with some issues.
+
+Broken: It doesn't run.
+
 ----------------------------------------------
 
 Version: 1.0.0
