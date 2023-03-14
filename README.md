@@ -49,7 +49,10 @@ Ubuntu: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange
 
 Mac OS: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
-Linux (with Wine): ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
+FreeBSD: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
+
+Wine (for Linux, FreeBSD, etc): ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
+
 
 
 ----------------------------------------------
