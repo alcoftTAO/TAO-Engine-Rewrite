@@ -73,6 +73,18 @@ namespace TAO.Engine.OpenGL
             return colors;
         }
 
+        public static TVector4[] ColorToTVector(Color4[] colors)
+        {
+            TVector4[] vectors = new TVector4[colors.Length];
+
+            for (int i = 0; i < vectors.Length; i++)
+            {
+                vectors[i] = new TVector4(colors[i].R, colors[i].G, colors[i].B, colors[i].A);
+            }
+
+            return vectors;
+        }
+
         //Vector To Color4
         public static Color4 VectorToColor(Vector3 vector)
         {

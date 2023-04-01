@@ -8,15 +8,23 @@ namespace TAO.Engine.OpenGL.OpenGLCore
 {
     public class TObject
     {
-        private static List<TObject> Objects = new List<TObject>();
+        protected static readonly List<TObject> Objects = new List<TObject>();
         public readonly int ID = GetID();
         public TVector3 Position = TVector3.Zero;
         public TVector3 Scale = TVector3.One;
+        public TVector3 Rotation = TVector3.Zero;
         public TVector3[] Vertices = new TVector3[0];
         public Color4[] Colors = new Color4[0];
         public string Texture = "";
         public TVector2[] TextureCoords = new TVector2[0];
         public PrimitiveType RenderMode = PrimitiveType.Polygon;
+        public bool AllowTransparency = true;
+        public TCollider Collider = new TCollider();
+
+        public TObject()
+        {
+            Objects.Add(this);
+        }
 
         public static TObject Triangle2D()
         {
@@ -33,6 +41,12 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                     new TVector2(0, 0),
                     new TVector2(1, 0),
                     new TVector2(0.5f, 1)
+                },
+                Collider = new TCollider()
+                {
+                    Enabled = true,
+                    Offset = TVector3.Zero,
+                    Size = TVector3.One
                 },
                 RenderMode = PrimitiveType.Triangles
             };
@@ -55,6 +69,12 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                     new TVector2(0, 1),
                     new TVector2(1, 1),
                     new TVector2(1, 0)
+                },
+                Collider = new TCollider()
+                {
+                    Enabled = true,
+                    Offset = TVector3.Zero,
+                    Size = TVector3.One
                 },
                 RenderMode = PrimitiveType.Quads
             };
@@ -106,6 +126,9 @@ namespace TAO.Engine.OpenGL.OpenGLCore
             obj.Colors = OpenGLMath.VectorToColor(Data.Colors);
             obj.TextureCoords = Data.TextureCoords;
             obj.Texture = Data.TextureName;
+            obj.AllowTransparency = Data.AllowTransparency;
+            obj.Position = Data.Position;
+            obj.Scale = Data.Scale;
 
             if (Data.RenderMode == "quads")
             {
@@ -140,6 +163,11 @@ namespace TAO.Engine.OpenGL.OpenGLCore
             return FromModel(ModelImportation.GetModelData(Name, FromMods));
         }
 
+        public void Delete()
+        {
+            Objects.Remove(this);
+        }
+
         public void ChangeColor(Color4 ColorToChange)
         {
             Colors = new Color4[Vertices.Length];
@@ -150,9 +178,53 @@ namespace TAO.Engine.OpenGL.OpenGLCore
             }
         }
 
-        public bool IsMouseOver(TWindow window)
+        public bool IsMouseOver(TVector2 MousePosition, float MaxDistance = float.MaxValue)
         {
             return false;
+        }
+
+        public bool CollidingWith(TObject Obj)
+        {
+            return TCollider.Colliding(
+                new TCollider(Position + Collider.Offset, Scale * Collider.Size, Collider.Enabled),
+                new TCollider(Obj.Position + Obj.Collider.Offset, Obj.Scale * Obj.Collider.Size, Obj.Collider.Enabled)
+            );
+        }
+
+        public bool CollidingWithAny()
+        {
+            foreach (TObject obj in Objects)
+            {
+                if (obj != this)
+                {
+                    if (CollidingWith(obj))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void Move(TVector3 Direction)
+        {
+            Position += Direction;
+
+            if (CollidingWithAny())
+            {
+                Position -= Direction;
+            }
+        }
+
+        public void ScaleObj(TVector3 Direction)
+        {
+            Scale += Direction;
+
+            if (CollidingWithAny())
+            {
+                Scale -= Direction;
+            }
         }
     }
 }

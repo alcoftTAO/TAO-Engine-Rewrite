@@ -60,6 +60,54 @@ namespace TAO.Engine
             return new TVector2(a.X / b, a.Y / b);
         }
 
+        public static bool operator <(TVector2 a, TVector2 b)
+        {
+            return
+                a.X < b.X ||
+                a.Y < b.Y;
+        }
+
+        public static bool operator <(TVector2 a, float b)
+        {
+            return
+                a.X < b ||
+                a.Y < b;
+        }
+
+        public static bool operator >(TVector2 a, TVector2 b)
+        {
+            return
+                a.X > b.X ||
+                a.Y > b.Y;
+        }
+
+        public static bool operator >(TVector2 a, float b)
+        {
+            return
+                a.X > b ||
+                a.Y > b;
+        }
+
+        public static bool operator <=(TVector2 a, TVector2 b)
+        {
+            return a < b || a == b;
+        }
+
+        public static bool operator <=(TVector2 a, float b)
+        {
+            return a < b || a == One * b;
+        }
+
+        public static bool operator >=(TVector2 a, TVector2 b)
+        {
+            return a > b || a == b;
+        }
+
+        public static bool operator >=(TVector2 a, float b)
+        {
+            return a > b || a == One * b;
+        }
+
         public override string ToString()
         {
             return "(" + X + ", " + Y + ")";
@@ -124,6 +172,58 @@ namespace TAO.Engine
         public static TVector3 operator /(TVector3 a, float b)
         {
             return new TVector3(a.X / b, a.Y / b, a.Z / b);
+        }
+
+        public static bool operator <(TVector3 a, TVector3 b)
+        {
+            return
+                a.X < b.X ||
+                a.Y < b.Y ||
+                a.Z < b.Z;
+        }
+
+        public static bool operator <(TVector3 a, float b)
+        {
+            return
+                a.X < b ||
+                a.Y < b ||
+                a.Z < b;
+        }
+
+        public static bool operator >(TVector3 a, TVector3 b)
+        {
+            return
+                a.X > b.X ||
+                a.Y > b.Y ||
+                a.Z > b.Z;
+        }
+
+        public static bool operator >(TVector3 a, float b)
+        {
+            return
+                a.X > b ||
+                a.Y > b ||
+                a.Z > b;
+        }
+
+        public static bool operator <=(TVector3 a, TVector3 b)
+        {
+            return a < b || a == b;
+        }
+
+        public static bool operator <=(TVector3 a, float b)
+        {
+            return a < b || a == One * b;
+        }
+
+        public static bool operator >=(TVector3 a, TVector3 b)
+        {
+            return a > b || a == b;
+        }
+
+        public static bool operator >=(TVector3 a, float b)
+        {
+            return a > b || a == One * b;
         }
 
         public override string ToString()
@@ -192,6 +292,62 @@ namespace TAO.Engine
         public static TVector4 operator /(TVector4 a, float b)
         {
             return new TVector4(a.X / b, a.Y / b, a.Z / b, a.W / b);
+        }
+
+        public static bool operator <(TVector4 a, TVector4 b)
+        {
+            return
+                a.X < b.X ||
+                a.Y < b.Y ||
+                a.Z < b.Z ||
+                a.W < b.W;
+        }
+
+        public static bool operator <(TVector4 a, float b)
+        {
+            return
+                a.X < b ||
+                a.Y < b ||
+                a.Z < b ||
+                a.W < b;
+        }
+
+        public static bool operator >(TVector4 a, TVector4 b)
+        {
+            return
+                a.X > b.X ||
+                a.Y > b.Y ||
+                a.Z > b.Z ||
+                a.W > b.W;
+        }
+
+        public static bool operator >(TVector4 a, float b)
+        {
+            return
+                a.X > b ||
+                a.Y > b ||
+                a.Z > b ||
+                a.W > b;
+        }
+
+        public static bool operator <=(TVector4 a, TVector4 b)
+        {
+            return a < b || a == b;
+        }
+
+        public static bool operator <=(TVector4 a, float b)
+        {
+            return a < b || a == One * b;
+        }
+
+        public static bool operator >=(TVector4 a, TVector4 b)
+        {
+            return a > b || a == b;
+        }
+
+        public static bool operator >=(TVector4 a, float b)
+        {
+            return a > b || a == One * b;
         }
 
         public override string ToString()

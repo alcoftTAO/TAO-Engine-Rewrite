@@ -15,61 +15,70 @@ namespace TAO.Engine
             List<TVector2> TextureCoords = new List<TVector2>();
             string TextureName = "";
             string RenderMode = "";
+            bool AllowTransparency = true;
+            TVector3 Position = TVector3.Zero;
+            TVector3 Scale = TVector3.One;
             TModelData data = new TModelData();
 
             for (int i = 0; i < modelData.Length; i++)
             {
-                string l = modelData[i].ToLower().Replace(".", ",");
+                string l = modelData[i];
+                string ll = l.ToLower();
 
-                if (l.StartsWith("vert "))
+                if (ll.StartsWith("vert "))
                 {
                     //Apply vertices
-                    string[] sv = l.Substring("vert ".Length).Split(' ');
-
-                    Vertices.Add(new TVector3(float.Parse(sv[0]), float.Parse(sv[1]), float.Parse(sv[2])));
+                    Vertices.Add(TBasicMath.StringToVector3(ll.Substring("vert ".Length)));
                 }
-                else if (l.StartsWith("texcoord "))
+                else if (ll.StartsWith("texcoord "))
                 {
                     //Apply texture coords
-                    string[] sv = l.Substring("texcoord ".Length).Split(' ');
-
-                    TextureCoords.Add(new TVector2(float.Parse(sv[0]), float.Parse(sv[1])));
+                    TextureCoords.Add(TBasicMath.StringToVector2(ll.Substring("texcoord ".Length)));
                 }
-                else if (l.StartsWith("texname "))
+                else if (ll.StartsWith("texname "))
                 {
                     //Apply texture
-                    TextureName = l.Substring("texname ".Length).Replace(",", ".");
+                    TextureName = l.Substring("texname ".Length);
                 }
-                else if (l.StartsWith("color "))
+                else if (ll.StartsWith("color "))
                 {
                     //Apply colors (in float, from 0 to 1)
-                    string[] sv = l.Substring("color ".Length).Split(' ');
-
-                    Colors.Add(new TVector4(float.Parse(sv[0]), float.Parse(sv[1]), float.Parse(sv[2]), float.Parse(sv[3])));
+                    Colors.Add(TBasicMath.StringToVector4(ll.Substring("color ".Length)));
                 }
-                else if (l.StartsWith("bcolor "))
+                else if (ll.StartsWith("bcolor "))
                 {
                     //Apply colors (in bytes, from 0 to 255)
-                    string[] sv = l.Substring("bcolor ".Length).Split(' ');
-
-                    Colors.Add(new TVector4(int.Parse(sv[0]), int.Parse(sv[1]), int.Parse(sv[2]), int.Parse(sv[3])));
+                    Colors.Add(TBasicMath.StringToVector4(ll.Substring("bcolor ".Length)) / 255);
                 }
-                else if (l.StartsWith("ctbcolor "))
-                {
-                    //Apply colors (convert from float, from 0 to 1, to byte, from 0 to 255)
-                    string[] sv = l.Substring("ctbcolor ".Length).Split(' ');
-
-                    Colors.Add(new TVector4(
-                        (int)(float.Parse(sv[0]) * 255),
-                        (int)(float.Parse(sv[1]) * 255),
-                        (int)(float.Parse(sv[2]) * 255),
-                        (int)(float.Parse(sv[3]) * 255)
-                    ));
-                }
-                else if (l.StartsWith("renmod "))
+                else if (ll.StartsWith("renmod "))
                 {
                     //Apply render mode
-                    RenderMode = l.Substring("renmod ".Length);
+                    RenderMode = ll.Substring("renmod ".Length);
+                }
+                else if (ll == "distran")
+                {
+                    //Set transparency to false
+                    AllowTransparency = false;
+                }
+                else if (ll == "enatran")
+                {
+                    //Set transparency to true
+                    AllowTransparency = true;
+                }
+                else if (ll == "togtran")
+                {
+                    //Toggle transparency
+                    AllowTransparency = !AllowTransparency;
+                }
+                else if (ll.StartsWith("pos "))
+                {
+                    //Apply position
+                    Position = TBasicMath.StringToVector3(ll.Substring("pos ".Length));
+                }
+                else if (ll.StartsWith("scl "))
+                {
+                    //Apply position
+                    Scale = TBasicMath.StringToVector3(ll.Substring("scl ".Length));
                 }
             }
 
@@ -78,6 +87,9 @@ namespace TAO.Engine
             data.TextureCoords = TextureCoords.ToArray();
             data.TextureName = TextureName;
             data.RenderMode = RenderMode;
+            data.AllowTransparency = AllowTransparency;
+            data.Position = Position;
+            data.Scale = Scale;
 
             return data;
         }
@@ -124,6 +136,9 @@ namespace TAO.Engine
         public TVector2[] TextureCoords = new TVector2[0];
         public string TextureName = "";
         public string RenderMode = "";
+        public bool AllowTransparency = true;
+        public TVector3 Position = TVector3.Zero;
+        public TVector3 Scale = TVector3.One;
 
         public override string ToString()
         {

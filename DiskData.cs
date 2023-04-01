@@ -62,6 +62,29 @@ namespace TAO.Engine
             //Log directories
             CreateDirectory("Logs/");
             CreateFile("Logs/latest.txt");
+
+            //Models importation data documentation
+            CreateFile("Assets/Models/TMD_Documentation.txt");
+            File.WriteAllText("Assets/Models/TMD_Documentation.txt", "" +
+                "----------------------------\n" +
+                "TAO Model Data Documentation\n" +
+                "----------------------------\n" +
+                "\n" +
+                "vert [Vector3] - Add a vertex.\n" +
+                "texcoord [Vector2] - Add a texture coordenate.\n" +
+                "texname [String] - Set the texture.\n" +
+                "color [Vector4] - Add a color (from 0 to 1).\n" +
+                "bcolor [Vector4] - Add a color (from 0 to 255).\n" +
+                "renmod [String] - Set the render mode.\n" +
+                "distran - Disable transparency.\n" +
+                "enatran - Enable transparency.\n" +
+                "togtran - Toggle transparency.\n" +
+                "pos - Set the position.\n" +
+                "scl - Set the scale.\n" +
+                "\n" +
+                "Everything else in the code will be ignored.\n" +
+                "For more information, visit https://github.com/alcoftTAO/TAO-Engine-Rewrite."
+            );
         }
 
         public static string[] GetAssetsFromDirectory(string Directory)

@@ -18,24 +18,22 @@ namespace TAO.Engine.OpenGL.OpenGLCore
         public Action OnResizeAction = null;
         public Action<KeyboardKeyEventArgs> OnKeyDownAction = null;
         public Action<KeyboardKeyEventArgs> OnKeyUpAction = null;
+        public Action BeforeDrawObjectAction = null;
+        public Action AfterDrawObjectAction = null;
         public List<EnableCap> EnableOnStart = new List<EnableCap>()
         {
             EnableCap.AlphaTest,
             EnableCap.Blend,
             EnableCap.DepthTest,
-            EnableCap.Fog,
             EnableCap.Texture2D,
-            EnableCap.TextureCubeMap,
-            EnableCap.Light0,
-            EnableCap.Light1
+            EnableCap.TextureCubeMap
         };
         public List<TObject> Objs = new List<TObject>();
         public Dictionary<string, TTexture> Textures = new Dictionary<string, TTexture>();
         public Color4 BackgroundColor = Color4.CornflowerBlue;
-        public Matrix4 Camera = Matrix4.Identity;
+        public TCamera Camera = new TCamera();
         public float DeltaTime = 0;
         public bool FullScreen = false;
-        public bool WideScreen = true;
         public TVector2 MousePosition = TVector2.Zero;
         public TVector2 MousePosition01 = TVector2.Zero;
         public Light SunLight = new Light()
@@ -44,6 +42,39 @@ namespace TAO.Engine.OpenGL.OpenGLCore
             LightIntensity = 255
         };
 
+        public static TWindow FromScene(TSceneData Data)
+        {
+            TWindow window = new TWindow();
+
+            window.Title = Data.SceneName;
+            window.BackgroundColor = OpenGLMath.VectorToColor(Data.BGColor);
+            window.SunLight.LightColor = OpenGLMath.VectorToColor(Data.SunColor);
+            window.SunLight.LightIntensity = Data.SunIntensity;
+
+            for (int i = 0; i < Data.Objects.Count; i++)
+            {
+                window.Objs.Add(TObject.FromModel(Data.Objects[i]));
+            }
+
+            return window;
+        }
+
+        public static TWindow FromScene(string SceneName, bool FromMods = false)
+        {
+            TWindow window = new TWindow();
+            TSceneData Data = TSceneCreation.GetSceneData(SceneName, FromMods);
+
+            window.Title = Data.SceneName;
+            window.BackgroundColor = OpenGLMath.VectorToColor(Data.BGColor);
+
+            for (int i = 0; i < Data.Objects.Count; i++)
+            {
+                window.Objs.Add(TObject.FromModel(Data.Objects[i]));
+            }
+
+            return window;
+        }
+
         public void BasicStart(VSyncMode VSync = VSyncMode.On)
         {
             //Setting the parameters
@@ -51,7 +82,7 @@ namespace TAO.Engine.OpenGL.OpenGLCore
 
             this.VSync = VSync;
 
-            if (this.Title.Trim() == "OpenTK Game Window")
+            if (this.Title.Trim() == "OpenTK Game Window" || this.Title.Trim() == "")
             {
                 this.Title = "OpenGL Core | " + info.Platform + " | " + info.ProcessArchitecture;
             }
@@ -75,8 +106,13 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)texture.WrapMode);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)texture.WrapMode);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texture.Result.Width, texture.Result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, texture.Result.Data);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texture.Result.Width, texture.Result.Height, 0,
+                    PixelFormat.Rgba, PixelType.UnsignedByte, texture.Result.Data);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            }
+            else
+            {
+                Log.WriteWarning("Texture '" + TextureName + "' doesn't exists.");
             }
         }
 
@@ -89,6 +125,45 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                 GL.BindTexture(TextureTarget.Texture2D, texture.ID);
                 GL.ClearTexImage(texture.ID, 0, PixelFormat.Rgba, PixelType.UnsignedByte, texture.Result.Data);
             }
+        }
+
+        public void ReloadCamera()
+        {
+            Camera.CameraMatrix = Matrix4.CreatePerspectiveFieldOfView
+            (
+                MathHelper.DegreesToRadians(Camera.FOV),
+                Width / (float)Height,
+                Camera.MinDistance,
+                Camera.MaxDistance
+            );
+        }
+
+        public void Translate(TVector3 Axis)
+        {
+            GL.Translate(OpenGLMath.TVectorToVector(Axis));
+        }
+
+        public void Rotate(TVector3 Axis, float Angle)
+        {
+            Angle = Math.Abs(Angle);
+            GL.Rotate(Angle, OpenGLMath.TVectorToVector(Axis));
+        }
+
+        public void Rotate(TVector3 Angles)
+        {
+            if (Angles <= 0)
+            {
+                Angles = TVector3.One;
+            }
+
+            GL.Rotate(Angles.X, Vector3.UnitX);
+            GL.Rotate(Angles.Y, Vector3.UnitY);
+            GL.Rotate(Angles.Z, Vector3.UnitZ);
+        }
+
+        public void Scale(TVector3 Axis)
+        {
+            GL.Scale(OpenGLMath.TVectorToVector(Axis));
         }
 
         protected override void OnLoad(EventArgs e)
@@ -138,8 +213,10 @@ namespace TAO.Engine.OpenGL.OpenGLCore
             }
 
             //Loading the camera
+            ReloadCamera();
+
             Log.WriteMessage("Loading camera Matrix4...");
-            GL.LoadMatrix(ref Camera);
+            GL.LoadMatrix(ref Camera.CameraMatrix);
 
             //Execute the action
             OSInfo.ExecuteAction(OnLoadAction);
@@ -213,9 +290,26 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                 //Push the camera
                 GL.PushMatrix();
 
+                //Run before draw object action
+                OSInfo.ExecuteAction(BeforeDrawObjectAction, false);
+
+                //Apply transparency (if allowed)
+                if (Objs[obj].AllowTransparency)
+                {
+                    GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+                }
+                else
+                {
+                    GL.BlendFunc(BlendingFactor.One, BlendingFactor.Zero);
+                }
+
+                //Calculate position
+                TVector3 pos = Objs[obj].Position * new TVector3(1, 1, -1);
+
                 //Translate and scale the object
-                GL.Translate(OpenGLMath.TVectorToVector(Objs[obj].Position));
-                GL.Scale(OpenGLMath.TVectorToVector(Objs[obj].Scale));
+                Translate(pos);
+                Scale(Objs[obj].Scale);
+                Rotate(Objs[obj].Rotation);
                 //Begin drawing
                 GL.Begin(Objs[obj].RenderMode);
 
@@ -242,6 +336,9 @@ namespace TAO.Engine.OpenGL.OpenGLCore
                         OpenGLMath.ExtraColorMath.Multiply(SunLight.LightColor, SunLight.LightIntensity)
                     );
 
+                    //Calculate vertex to "v" vector
+                    v.Z = -v.Z;
+
                     //Drawing the vert with the color and texture coords
                     if (Objs[obj].Texture.Trim() != "")
                     {
@@ -265,6 +362,9 @@ namespace TAO.Engine.OpenGL.OpenGLCore
 
                 //Stop drawing
                 GL.End();
+
+                //Run after draw object action
+                OSInfo.ExecuteAction(AfterDrawObjectAction, false);
 
                 //Pop the camera
                 GL.PopMatrix();
