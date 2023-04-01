@@ -43,7 +43,7 @@ Windows 11: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-or
 
 Arch Linux: ![build](https://img.shields.io/badge/build%20(Mono)-Broken-red) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
-Debian: ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
+Debian: ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Stable-green)
 
 Ubuntu: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
