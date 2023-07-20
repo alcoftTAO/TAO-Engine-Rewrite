@@ -45,7 +45,7 @@ Arch Linux: ![build](https://img.shields.io/badge/build%20(Mono)-Broken-red) ![b
 
 Debian: ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Stable-green)
 
-Ubuntu: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
+Ubuntu: ![build](https://img.shields.io/badge/build%20(Mono)-Stable-green) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
 Mac OS: ![build](https://img.shields.io/badge/build%20(Mono)-Not%20Tested-orange) ![build](https://img.shields.io/badge/build%20(.NET)-Not%20Tested-orange)
 
