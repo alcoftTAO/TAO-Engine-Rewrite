@@ -59,7 +59,7 @@ Wine (for Linux, FreeBSD, etc): ![build](https://img.shields.io/badge/build%20(M
 
 
 ## Why this license?
-We want this game engine open-source with no conditions.
+We want this game engine open-source and free.
 
 
 ----------------------------------------------
